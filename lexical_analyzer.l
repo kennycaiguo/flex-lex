@@ -3,7 +3,7 @@
 ***/
 
 %{
-	/* #include "sds/sds.h" */
+	#include "sds/sds.c"
 
 	#define TOKEN_COUNT 0
 	#define LEXEME_COUNT 1
@@ -31,9 +31,9 @@
 	int comment[2] = {0,0};
 	int ternary_question_mark[2] = {0,0};
 	int ternary_colon[2] = {0,0};
-	/* sds identifier_names;
+	sds identifier_names;
 	sds integer_names;
-	sds float_names; */
+	sds float_names;
 
 	void printAndIncrementOperatorCounts(char* yytext, char * type, int store[2]){
 		printf("%s operator: %s\n\n", type, yytext);
@@ -79,6 +79,8 @@ TERNARY_COLON :
 
 [[:alpha:]_][[:alnum:]_]*  {
 	printAndIncrementCounts(yytext, "identifier", identifiers);
+	identifier_names = sdscat(identifier_names, yytext);
+	identifier_names = sdscat(identifier_names, ",");
 }
 
 [[:digit:]]+ {
@@ -167,9 +169,9 @@ TERNARY_COLON :
 int yywrap(){return 1;}
 
 int main(){
-	/* identifier_names = sdsempty();
+	identifier_names = sdsempty();
 	float_names = sdsempty();
-	integer_names = sdsempty(); */
+	integer_names = sdsempty();
 
 	char filename[50];
 	printf("Enter the source code filename(<filename>.c): \n\n");
@@ -228,7 +230,24 @@ int lexeme_count =  literals[LEXEME_COUNT] +
 										ternary_question_mark[LEXEME_COUNT] + 
 										ternary_colon[LEXEME_COUNT];
 
-	printf("Token count: %d\nLexeme Count: %d\n", token_count, lexeme_count);
+	/* print out the lexeme and token count */
+	printf("Token count: %d\nLexeme Count: %d\n\n", token_count, lexeme_count);
+
+	/* print the table */
+
+	/* split the string */
+	int identifier_string_length = (int) sdslen(identifier_names);
+	int number_of_identifiers = 0;
+
+	/* split the string */
+	sds* identifier_list = sdssplitlen(identifier_names, identifier_string_length, ",", 1, &number_of_identifiers);
+
+	printf("\nSymbol Table At This Stage:\n\n");
+	printf("%-20s%-20s%-20s\n", "Symbol", "Type", "Value");
+
+	for(int i = 0; i<number_of_identifiers; i++){
+		printf("%-20s\n", identifier_list[i]);
+	}
 
 	return 0;
 }
