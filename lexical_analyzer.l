@@ -49,7 +49,7 @@
 %}
 
 QUOTED_STRING \".*\"
-KEYWORDS (auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|int|long|register|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while)
+KEYWORDS (auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|int|long|register|return|short|signed|sizeof|static|struct|switch|then|typedef|union|unsigned|void|volatile|while)
 UNARY_OPERATORS (\+\+|--)
 ARITHMETIC_OPERATORS (\+|-|\*|\/|%)
 RELATIONAL_OPEARATORS (>|<|>=|<=|==|!=)
@@ -151,6 +151,10 @@ TERNARY_COLON :
 	printAndIncrementCounts(yytext, "right curly bracket", right_curly_bracket);
 }
 
+{SEPARATOR} {
+	printAndIncrementCounts(yytext, "separator", separator);
+}
+
 {COMMENT} {
 	printf("Skipping comment: %s\n\n", yytext);
 }
@@ -164,7 +168,7 @@ TERNARY_COLON :
 %%
 
 /* called after each yylex run to check if all operations are done
-	 returning 1 or > means they are 
+	 returning 1 or > means they are
 	 */
 int yywrap(){return 1;}
 
@@ -174,60 +178,59 @@ int main(){
 	integer_names = sdsempty();
 
 	char filename[50];
-	printf("Enter the source code filename(<filename>.c): \n\n");
+	printf("Enter the source code filename(<filename>.c): \n");
 
-	/* scanf("%s", filename);
-	yyin = fopen(filename, "r"); */
+	scanf("%s", filename);
+	yyin = fopen(filename, "r");
 
-	yyin = fopen("input.txt", "r");
 
 	/* the meat of flex lex */
 	yylex();
 
-	int token_count = literals[TOKEN_COUNT] + 
-										identifiers[TOKEN_COUNT] + 
-										keywords[TOKEN_COUNT] + 
-										integers[TOKEN_COUNT] + 
-										floats[TOKEN_COUNT] + 
-										punctuation[TOKEN_COUNT] + 
-										unary_operators[TOKEN_COUNT] + 
-										arithmetic_operators[TOKEN_COUNT] + 
-										relational_operators[TOKEN_COUNT] + 
-										assignment_operators[TOKEN_COUNT] + 
-										logical_operators[TOKEN_COUNT] + 
-										bitwise_operators[TOKEN_COUNT] + 
-										left_paren[TOKEN_COUNT] + 
-										right_paren[TOKEN_COUNT] + 
-										separator[TOKEN_COUNT] + 
-										terminator[TOKEN_COUNT] + 
-										left_curly_bracket[TOKEN_COUNT] + 
-										right_curly_bracket[TOKEN_COUNT] + 
-										left_bracket[TOKEN_COUNT] + 
-										right_bracket[TOKEN_COUNT] + 
-										ternary_question_mark[TOKEN_COUNT] + 
+	int token_count = literals[TOKEN_COUNT] +
+										identifiers[TOKEN_COUNT] +
+										keywords[TOKEN_COUNT] +
+										integers[TOKEN_COUNT] +
+										floats[TOKEN_COUNT] +
+										punctuation[TOKEN_COUNT] +
+										unary_operators[TOKEN_COUNT] +
+										arithmetic_operators[TOKEN_COUNT] +
+										relational_operators[TOKEN_COUNT] +
+										assignment_operators[TOKEN_COUNT] +
+										logical_operators[TOKEN_COUNT] +
+										bitwise_operators[TOKEN_COUNT] +
+										left_paren[TOKEN_COUNT] +
+										right_paren[TOKEN_COUNT] +
+										separator[TOKEN_COUNT] +
+										terminator[TOKEN_COUNT] +
+										left_curly_bracket[TOKEN_COUNT] +
+										right_curly_bracket[TOKEN_COUNT] +
+										left_bracket[TOKEN_COUNT] +
+										right_bracket[TOKEN_COUNT] +
+										ternary_question_mark[TOKEN_COUNT] +
 										ternary_colon[TOKEN_COUNT];
 
-int lexeme_count =  literals[LEXEME_COUNT] + 
-										identifiers[LEXEME_COUNT] + 
-										keywords[LEXEME_COUNT] + 
-										integers[LEXEME_COUNT] + 
-										floats[LEXEME_COUNT] + 
-										punctuation[LEXEME_COUNT] + 
-										unary_operators[LEXEME_COUNT] + 
-										arithmetic_operators[LEXEME_COUNT] + 
-										relational_operators[LEXEME_COUNT] + 
-										assignment_operators[LEXEME_COUNT] + 
-										logical_operators[LEXEME_COUNT] + 
-										bitwise_operators[LEXEME_COUNT] + 
-										left_paren[LEXEME_COUNT] + 
-										right_paren[LEXEME_COUNT] + 
-										separator[LEXEME_COUNT] + 
-										terminator[LEXEME_COUNT] + 
-										left_curly_bracket[LEXEME_COUNT] + 
-										right_curly_bracket[LEXEME_COUNT] + 
-										left_bracket[LEXEME_COUNT] + 
-										right_bracket[LEXEME_COUNT] + 
-										ternary_question_mark[LEXEME_COUNT] + 
+int lexeme_count =  literals[LEXEME_COUNT] +
+										identifiers[LEXEME_COUNT] +
+										keywords[LEXEME_COUNT] +
+										integers[LEXEME_COUNT] +
+										floats[LEXEME_COUNT] +
+										punctuation[LEXEME_COUNT] +
+										unary_operators[LEXEME_COUNT] +
+										arithmetic_operators[LEXEME_COUNT] +
+										relational_operators[LEXEME_COUNT] +
+										assignment_operators[LEXEME_COUNT] +
+										logical_operators[LEXEME_COUNT] +
+										bitwise_operators[LEXEME_COUNT] +
+										left_paren[LEXEME_COUNT] +
+										right_paren[LEXEME_COUNT] +
+										separator[LEXEME_COUNT] +
+										terminator[LEXEME_COUNT] +
+										left_curly_bracket[LEXEME_COUNT] +
+										right_curly_bracket[LEXEME_COUNT] +
+										left_bracket[LEXEME_COUNT] +
+										right_bracket[LEXEME_COUNT] +
+										ternary_question_mark[LEXEME_COUNT] +
 										ternary_colon[LEXEME_COUNT];
 
 	/* print out the lexeme and token count */
