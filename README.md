@@ -7,6 +7,7 @@ Lexical analysis is the first phase of a compiler. It takes the modified source 
 If the lexical analyzer finds a token invalid, it generates an error. The lexical analyzer works closely with the syntax analyzer. It reads character streams from the source code, checks for legal tokens, and passes the data to the syntax analyzer when it demands.
 
 ##**2. Plan and Preliminaries**
+
 **a) Specifications of Tokens**
 
 Language theory undertakes the following terms:
@@ -146,11 +147,13 @@ With the appropriate rules about the algorithm design principle and the domain, 
 The final algorithm design is composed of two cascading processes connected by a buffer as described below:
 
 **a) Scanning**
+
 The sample input file (eg. sample_input.c) is processed character by character in ways such as:
 i) Remove comments
 ii) Replace strings of whitespace(tabs, blanks, and newlines) by single blanks
 
 **b) Lexical Analysis**
+
 Group the stream of refined input characters(lexemes) into tokens i.e.
 
 Raw input --> SCANNER --> Refined input --> LEXICAL ANALYZER --> Token stream
