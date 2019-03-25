@@ -1,21 +1,27 @@
-Algorithm Design for a Lexical Analyzer
+#Algorithm Design for a Lexical Analyzer
 
-1. Understanding The Problem
+##1. Understanding The Problem
+
 Lexical analysis is the first phase of a compiler. It takes the modified source code from language preprocessors that are written in the form of sentences. The lexical analyzer breaks these syntaxes into a series of tokens, by removing any whitespace or comments in the source code.
 
 If the lexical analyzer finds a token invalid, it generates an error. The lexical analyzer works closely with the syntax analyzer. It reads character streams from the source code, checks for legal tokens, and passes the data to the syntax analyzer when it demands.
 
-2. Plan and Preliminaries
-a) Specifications of Tokens
+##2. Plan and Preliminaries
+
+###a) Specifications of Tokens
+
 Language theory undertakes the following terms:
 
-Alphabets
+####Alphabets
+
 Any finite set of symbols {0,1} is a set of binary alphabets, {0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F} is a set of Hexadecimal alphabets, {a-z, A-Z} is a set of English language alphabets.
 
-Strings
+####Strings
+
 Any finite sequence of alphabets is called a string. Length of the string is the total number of occurrence of alphabets, e.g., the length of the string tutorialspoint is 14 and is denoted by |tutorialspoint| = 14. A string having no alphabets, i.e. a string of zero length is known as an empty string and is denoted by ε (epsilon).
 
-Special Symbols
+####Special Symbols
+
 A typical high-level language contains the following symbols:-
 
 Arithmetic Symbols:	Addition(+), Subtraction(-), Modulo(%), Multiplication(*), Division(/)
@@ -29,11 +35,11 @@ Logical operators:	&, &&, |, ||, !
 Shift Operators:	>>, >>>, <<, <<<
 e.t.c
 
-b) Longest Match Rule
+### b)Longest Match Rule
+
 When the lexical analyzer reads the source-code, it scans the code letter by letter; and when it encounters a whitespace, operator symbol, or special symbols, it decides that a word is completed.
 
-For example:
-int intvalue;
+For example: int intvalue;
 
 While scanning both lexemes till ‘int’, the lexical analyzer cannot determine whether it is a keyword int or the initials of identifier int value.
 
@@ -43,11 +49,12 @@ The lexical analyzer also follows rule priority where a reserved word, e.g., a k
 
 The lexical analyzer needs to scan and identify only a finite set of valid string/token/lexeme that belong to the language in hand. It searches for the pattern defined by the language rules.
 
-c) Regular Expressions
+###c) Regular Expressions
 These are useful notation for describing the token classes.
 ACTION tables can be generated from them directly, although the construction is somewhat complicated.
 
-Operands:
+####Operands
+
 1. Single characters, e.g, + , A .
 2. Character classes, e.g.,
 letter = [A-Za-z]
@@ -56,7 +63,8 @@ addop = [+-]
 
 Expressions built from operands and operators denote sets of strings.
 
-Operators
+####Operators
+
 1. Concatenation. ( R )( S ) denotes the set of all strings formed by taking a string in the set denoted by
 R and following it by a string in the set denoted by S . For example, the keyword "then" can be expressed as a
 regular expression by then.
@@ -71,7 +79,8 @@ is either a letter or a digit.
 The usual order of precedence is * highest, then concatenation, then +. Thus, a + bc* is
 a + (b (c*))
 
-Shorthands
+####Shorthands
+
 a) R + stands for "one or more occurrences of," i.e., R+ = RR* . Do not confuse infix +, meaning "or,"
 with the superscript +.
 
@@ -82,10 +91,11 @@ Some Examples
 identifier = letter(letter + digit )*
 float = digit+.digit* +.digit+
 
-d) Finite Automata
+###d) Finite Automata
+
 A collection of states and rules for transferring among states in response to inputs. They look like state diagrams, and they can be represented by ACTION tables. We can convert any collection of regular expressions to a FA; the details are in the text. Intuitively, we begin by writing the "or" of the regular expressions for each of our tokens.
 
-In our simple example of plus signs, identi ers, and \if," we would write:
+In our simple example of plus signs, identi ers, and "if," we would write:
 
 + + i f + letter(letter + digit)*
 
@@ -100,42 +110,45 @@ However, just because a token has been seen does not mean that the lexical analy
 see a longer instance of the same token (e.g., identifier) or we could see a longer string that is an instance
 of another token.
 
-Using the Finite Automaton
+###Using the Finite Automaton
+
 To disambiguate situations where more than one candidate token exists:
 i) Prefer longer strings to shorter. Thus, we do not take a or ab to be the token when confronted with identifier abc.
 ii) Let the designer of the lexical analyzer pick an order for the tokens. If the longest possible string matches two or more tokens, pick the first in the order. Thus, we might list keyword tokens before the token "identifier," and confronted with string
 if +... would determine that we had the keyword "if," not an identifier if.
 
-3. Execution
+##3. Execution
+
 Two kinds of execution of partially specified algorithms were observed — one on concrete data (test-case execution, for example, sample_input.c file) and the other on symbolic exemplars (symbolic execution, for example, raw input strings). Both forms of trial execution helped elaborate the algorithm description by exposing difficulties and opportunities.
 
 We found it useful to view execution as a technique for selectively propagating constraints (assertions.) by moving
 them around in the order in which the steps of the algorithm are executed. This limits the reasoning that might otherwise be necessary to find contradictions and make inferences.
 
-4. Difficulties and Opportunities
+##4. Difficulties and Opportunities
 Difficulties were encountered while deriving some regular expressions to identify the patterns of some lexemes. In particular, the regular expression for non-tokens such as comments was troublesome. Another major difficulty was that of generating the symbol table since at the Lexical analysis stage of compilation, a symbol table isn't generated and therefore specifying the exact fields and records was a major challenge.
 
 The major opportunity brought forth with the completion of the Lexical Analyzer is buiding a parser to complement the Analysis phase of a compiler.
 
-5. Verifying Correctness
+##5. Verifying Correctness
 We determined whether the algorithms were correct primarily by testing them on specific examples and observing whether there were any errors generated. Test case execution in fact was made to do the job of full formal verification. To do this, the algorithm was executed on a test case file (sample_input.c) and all assertions were propagated to determine whether the results of the algorithm (and its subparts) match the specifications.
 
 If a specification included performance constraints, then verification must also include an evaluation (see Section 6) to determine whether the solution is efficient enough (in time or space complexity) according to the expectations.
 
 During the initial algorithm design, we ignored "details" such as comments, preprocessor directives, whitespace, among others. The heuristic was to get an algorithm for the general case first, then worry about modifying it later to take the exceptions into account.
 
-6. Evaluating Plans, Refinements, and Solutions
+##6. Evaluating Plans, Refinements, and Solutions
 The descriptions of the processes used in design did not detail how plans, refinement steps, and overall solutions are evaluated. Evaluation can be based on specific knowledge about the algorithm design principles being applied or/on an analysis of the cost of the algorithm and its subparts.
 
 With the appropriate rules about the algorithm design principle and the domain, then the refinement process can be smooth and top down.'Generate and test' is usually the fall back idea, which is sometimes very efficient (linear in the input size) and sometimes not.
 
 The final algorithm design is composed of two cascading processes connected by a buffer as described below:
-a) Scanning
+
+###a) Scanning
 The sample input file (eg. sample_input.c) is processed character by character in ways such as:
 i) Remove comments
 ii) Replace strings of whitespace(tabs, blanks, and newlines) by single blanks
 
-b) Lexical Analysis
+###b) Lexical Analysis
 Group the stream of refined input characters(lexemes) into tokens i.e.
 
 Raw input --> SCANNER --> Refined input --> LEXICAL ANALYZER --> Token stream
