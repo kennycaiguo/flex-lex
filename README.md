@@ -35,7 +35,7 @@ Logical operators:	&, &&, |, ||, !
 Shift Operators:	>>, >>>, <<, <<<
 e.t.c
 
-### b)Longest Match Rule
+###b)Longest Match Rule
 
 When the lexical analyzer reads the source-code, it scans the code letter by letter; and when it encounters a whitespace, operator symbol, or special symbols, it decides that a word is completed.
 
